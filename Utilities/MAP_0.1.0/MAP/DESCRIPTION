@@ -1,0 +1,32 @@
+Package: MAP
+Type: Package
+Title: Multimodal Automated Phenotyping
+Version: 0.1.0
+Author: Jiehuan Sun [aut, cre], Tianxi Cai [aut]
+Maintainer: Jiehuan Sun <jiehuan.sun@gmail.com>
+Description: Electronic medical records (EMR) linked with biorepositories are 
+    useful sources for research such as Phenome-Wide Association Studies (PheWAS).
+    However, accurate disease phenotype information is not readily available in the 
+    EMR database. The standard PheWAS method classifies phenotype status by thresholding 
+    PheWAS codes defined by grouped ICD-9 codes. This approach has several 
+    limitations including inaccuracies in ICD-9 codes and variability in 
+    thresholds across diseases, which hampers the power of PheWAS. 
+    To improve the power of PheWAS, we propose to do phenotyping by combining 
+    information from ICD-9 codes and mentions of the phenotype in clinical 
+    notes extracted via natural language processing (NLP) to produce a 
+    predicted probability of having the phenotype for each patient.
+    We also aim to employ a data-driven approach to select the optimal threshold 
+    for classifying disease status. Specifically, we jointly analyze ICD-9 and NLP counts 
+    by fitting mixture models adjusted for healthcare utilization to 
+    derive predicted probabilities of positive phenotype for each patient 
+    (Please see [ref] For more details). This package allows to perform the 
+    Multimodal Automated Phenotyping alrogithm.
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+Depends: R (>= 3.4.0), flexmix (>= 2.3-14)
+Suggests: knitr
+VignetteBuilder: knitr
+RoxygenNote: 6.0.1
+NeedsCompilation: no
+Packaged: 2018-04-07 16:23:42 UTC; JiehuanSun
