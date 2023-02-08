@@ -36,10 +36,10 @@ max_time = 25
 
 
 
-#simulation_stm(50,paste0(mdir,'/Real/T2D/',data.file,'.Rds'),
-#        paste0(mdir,'/Real/T2D/train_patients_',num_train,'.csv'),
-#        paste0(mdir,'/Real/T2D/test_patients.csv'),
-#        result.file=paste0(mdir,'/Real/Benchmark/stm.auc.',data.file,'.Rds'),time.grid = (min_t+1):max_t)
+simulation_stm(50,paste0(mdir,'/Real/T2D/',data.file,'.Rds'),
+        paste0(mdir,'/Real/T2D/train_patients.csv'),
+        paste0(mdir,'/Real/T2D/test_patients.csv'),
+        result.file=paste0(mdir,'/Real/Benchmark/stm.auc.',data.file,'.Rds'),time.grid = 1:max_time)
 
 
 
@@ -78,30 +78,30 @@ plot_methods_dh = function(phe.nm){
    # auc.kw = ts.auc.CI(readRDS(paste0(mdir,'/Real/Benchmark/kw.auc.',phe.nm,'.Rds')),(min_t+1):max_t)
 
     # TODO: adapt the time_grid
-    #auc.stm = ts.auc.CI(readRDS(paste0(mdir,'/Real/Benchmark/stm.auc.',phe.nm,'.Rds')),(min_t+1):max_t)
+    auc.stm = ts.auc.CI(readRDS(paste0(mdir,'/Real/Benchmark/stm.auc.',phe.nm,'.Rds')),1:max_time)
 
     # TODO: adapt the time_grid
     auc.deephit = ts.auc.CI(read.csv(paste0(dir.benchmark,phe.nm,'_tspec_AUC-ALL.deephit_labels.csv'))[,2:51],1:max_time)
 
     ggdf =  data.frame(time = c( auc.main2$time,
                               # auc.kw$time,
-                              # auc.stm$time,
+                              auc.stm$time,
                                auc.deephit$time),
                      auc = c( auc.main2$mean,
                              # auc.kw$mean,
-                              #auc.stm$mean,
+                              auc.stm$mean,
                               auc.deephit$mean),
                      low = c( auc.main2$low,
                              # auc.kw$low,
-                             # auc.stm$low,
+                             auc.stm$low,
                               auc.deephit$low),
                      up = c( auc.main2$up,
                             # auc.kw$up,
-                            # auc.stm$up,
+                            auc.stm$up,
                              auc.deephit$up),
                      method = c(rep('Main Method',length(auc.main2$time)),
                               #  rep('Kernel Weighted Time-specific Regression',length(auc.kw$time)),
-                               # rep('Semiparametric Transformation Model',length(auc.stm$time)),
+                               rep('Semiparametric Transformation Model',length(auc.stm$time)),
                                 rep('Deep Hit',length(auc.deephit$time)))
     )
   # ggplot
