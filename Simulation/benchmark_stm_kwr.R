@@ -64,7 +64,7 @@ stm.regression = function(X,C,S,Y,train,test,time.grid){
   h = sd(C[train])/(sum(Y[train]))^0.25
   # PCA
   Z = prcomp(X,center = TRUE,scale. = TRUE)$x[,1:8]
-  # STM 
+  # STM
   ip.fit = implicit.profile(Y[train],Z[train,],KC = dnorm(as.matrix(dist(C[train]/h,diag=T,upper=T)))/h, 
                             C[train], h.loop = F,
                             glink = expexp, dglink = dexpexp)
