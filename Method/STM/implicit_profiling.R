@@ -1,16 +1,28 @@
-implicit.profile = function(delta,Z, KC, C,
+implicit.profile = function(data,delta,Z, KC, C,
                             init = rep(0,ncol(Z)), tol=1e-7,
                      maxit = 100, min.factor = 0.75,
                      ls.factor = 0.75, max.move = 1,
                      h.loop = T, glink = expit, 
                      dglink = dexpit)
 {
+
+  p = ncol(data$Z)
+  init = glm(delta~log(C)+Z,data=data,family=binomial)$coef[3:(p+2)]
+  if(any(is.na(init)))
+    {
+      data$Z = data$Z[,!is.na(init)]
+      #Z.sd = Z.sd[!is.na(tmpinit)]
+      p = ncol(data$Z)
+      init = glm(delta~log(C)+Z,data=data,family=binomial)$coef[3:(p+2)]
+    }
+
+
   start = Sys.time()
   n = nrow(Z)
   KCd = drop(KC%*%delta)
   hC = rep(0,n)
   oldscore = NULL
-  
+
   for(k in 1:maxit) 
   {
     lp = drop(Z%*%init)
@@ -62,6 +74,7 @@ implicit.profile = function(delta,Z, KC, C,
           break
         }
         init = init - dinit
+        #print(init)
         next
       }
     oldscore = bscore
@@ -69,12 +82,13 @@ implicit.profile = function(delta,Z, KC, C,
     dinit = solve(bHess,bscore)
     if(all(abs(bscore)<tol))
       break
-    # print(rbind(init,bscore,dinit))
+    #print(rbind(init,bscore,dinit))
+    #print(init)
     init = init - dinit
   }
   if(k >=maxit)
     stop("Numerical error when computing beta_delta")
-  
+
   C.order = order(C)
   hfun = stepfun(C[C.order],c(min(hC),hC[C.order]))
   

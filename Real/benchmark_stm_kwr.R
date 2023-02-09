@@ -52,8 +52,6 @@ simulation_kw = function(n.repeat=100,summary.file,train.file,test.file,unlabele
 
 
 
-
-
 ## semiparametric transformation #
 # -------------------------------------#
 source(paste0(mdir,'/Method/STM/pred_STM.R'))
@@ -63,9 +61,12 @@ source(paste0(mdir,'/Method/STM/utility.R'))
 stm.regression = function(X,C,S,Y,train,test,time.grid){
   h = sd(C[train])/(sum(Y[train]))^0.25
   # PCA
-  Z = prcomp(X,center = TRUE,scale. = TRUE)$x[,1:8]
-  # STM 
-  ip.fit = implicit.profile(Y[train],Z[train,],KC = dnorm(as.matrix(dist(C[train]/h,diag=T,upper=T)))/h, 
+  Z = prcomp(X,center = TRUE,scale. = TRUE)$x[,1:3]
+  # STM
+
+  data = list(delta = Y[train],Z = Z[train,],C = C[train])
+
+  ip.fit = implicit.profile(data,Y[train],Z[train,],KC = dnorm(as.matrix(dist(C[train]/h,diag=T,upper=T)))/h,
                             C[train], h.loop = F,
                             glink = expexp, dglink = dexpexp)
   pred.mat = pred.STM(ip.fit, Z[test,], tgrid = time.grid,glink = expexp)
